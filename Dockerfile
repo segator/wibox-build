@@ -1,14 +1,11 @@
 FROM debian:bullseye-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    make wget git build-essential zlib1g-dev rsync \
+    make wget zlib1g rsync file \
     && rm -rf /var/lib/apt/lists/*
 
-# Build cramfs tools
-RUN git clone --depth 1 https://github.com/npitre/cramfs-tools.git /tmp/ct \
-    && cd /tmp/ct && make \
-    && cp cramfsck mkcramfs /usr/local/bin/ \
-    && rm -rf /tmp/ct
+COPY cramfsck mkcramfs /usr/local/bin/
+RUN chmod +x /usr/local/bin/cramfsck /usr/local/bin/mkcramfs
 
 WORKDIR /build
 ENTRYPOINT ["make"]
