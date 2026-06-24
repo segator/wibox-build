@@ -1,52 +1,49 @@
-# Fermax Wi-Box
+# WiBox Custom Firmware Builder
 
-This repository contains hardware and software information from [Fermax Wi-Box] device,
-and contains custom scripts and files to patch and use the device locally,
-instead of using Chinese cloud.
+Dockerized build environment for [duhow/wibox](https://github.com/duhow/wibox) Fermax WiBox custom firmware.
 
-[Fermax Wi-Box]: https://www.fermax.com/spain/single-products/f03266-desvio-de-llamada-wifi-vds-wi-box
+## Quick Start
 
-- [x] Disable Sofia (original program) at boot, can be re-enabled
-- [x] Allow to modify root password
-- [x] Open door remotely via HTTP and MQTT
-- [x] Integrate with Home Assistant (MQTT)
-- [ ] Use intercom audio
-- [x] Build toolset to compile other software
-- [x] Use dropbear SSH
+```bash
+# 1. Build the Docker image
+docker build -t wibox-build-tool .
 
-This has been tested with following firmware versions:
-- `V500.R001.A103.00.G0021.B007`
-- `V500.R001.A103.00.G0021.B013`
+# 2. Copy your original mtd4 backup as 'mtd4' in this directory
 
-# Requirements
+# 3. Build the custom firmware
+docker run --rm --entrypoint bash \
+  -v $(pwd):/work -w /work \
+  wibox-build-tool -c 'make all FILE=mtd4'
 
-This project uses [cramfs-tools] to extract and build the userdata image.
-
-[cramfs-tools]: https://github.com/npitre/cramfs-tools
-
-# Install
-
-Check [INSTALL](./INSTALL.md) document for complete information.
-
-Use `sudo make all` to run all the steps to prepare your custom image.
-
-You can manually extract and build your image:
-
-```
-sudo cramfsck -x /tmp/cram mtd4-file
-sudo mkcramfs -e 0 -v -L /tmp/cram/ /tmp/cramfs.file
+# 4. Output: release/latest (cramfs image, ~4MB)
 ```
 
-# Related
+## What's inside
 
-Some content is provided from the following sources:
+- **Debian Bullseye** with cramfs tools (cramfsck + mkcramfs)
+- All [duhow/wibox](https://github.com/duhow/wibox) patch scripts
+- WiFi (wpa_supplicant from factory sbin)
+- Telnet (port 23) for recovery
 
-- [https://linuch.pl/blog/fermax-wayfi-wideodomofon-hack-czesc-1](https://web.archive.org/web/20211121234612/https://linuch.pl/blog/fermax-wayfi-wideodomofon-hack-czesc-1)  
-- [https://linuch.pl/blog/fermax-wayfi-wideodomofon-hack-czesc-2](https://web.archive.org/web/20211124125931/https://linuch.pl/blog/fermax-wayfi-wideodomofon-hack-czesc-2) 
-- [https://linuch.pl/blog/fermax-wayfi-wideodomofon-hack-czesc-3](https://web.archive.org/web/20211128173119/https://linuch.pl/blog/fermax-wayfi-wideodomofon-hack-czesc-3) 
+## Flash to WiBox
 
-# Disclaimer
+Via U-boot (YMODEM):
+```
+mw.b 0xC1000000 ff 00400000
+sf probe
+loady 0xC1000000
+sf erase 0x00460000 00400000
+sf write 0xC1000000 0x00460000 00400000
+reset
+```
 
-YOU are responsible for any use or damage this software may cause.
-This repo and its content is intended for educational and research purposes only.
-Use at your own risk.
+## Custom modifications
+
+To add strace tracing on Sofia startup, edit `cramfs/run-orig.sh` after `make extract`:
+
+```bash
+sed -i "/telnetd &/a mkdir -p /mnt/mtd/dropbear && dropbear -R &" cramfs/run-orig.sh
+sed -i 's|interDebug /var/Sofia 9527|/mnt/mtd/strace -f -e trace=ioctl -o /mnt/mtd/sofia_init.log interDebug /var/Sofia 9527 &|' cramfs/run-orig.sh
+```
+
+Then `make build` to rebuild.
