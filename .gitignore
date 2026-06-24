@@ -26,3 +26,6 @@ mkcramfs
 cramfs/
 release/
 mtd4
+mkcramfs
+cramfsck
+mtd4.bak
