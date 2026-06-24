@@ -16,9 +16,11 @@ fi
 
 echo "[*] Downloading mosquitto ${PACKAGE_VERSION}"
 wget -q -O mosquitto.tar.gz ${PACKAGE_DOWNLOAD}
-
 mkdir -p mosquitto
 tar xf mosquitto.tar.gz -C mosquitto --strip-components=1
+
+echo "[*] Patching dummypthread.h"
+sed -i 's/#define pthread_testcancel()/#define pthread_testcancel(void)/' mosquitto/lib/dummypthread.h
 
 echo "[*] Building mosquitto"
 make -C mosquitto \
@@ -37,4 +39,4 @@ for NAME in mosquitto_sub mosquitto_pub; do
   cp mosquitto/client/${NAME} include/bin/${NAME}
 done
 rm -rf mosquitto mosquitto.tar.gz
-echo "[*] mosquitto built successfully"
+echo "[*] mosquitto OK"
