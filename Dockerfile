@@ -6,4 +6,3 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && cd /tmp/ct && make && cp cramfsck mkcramfs /usr/local/bin/ && rm -rf /tmp/ct \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /build
