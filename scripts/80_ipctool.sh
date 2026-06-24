@@ -17,7 +17,7 @@ echo "[*] Downloading ipctool"
 if command -v curl >/dev/null ; then
   curl -Lo ${FILE} ${FILE_DOWNLOAD}
 else
-  wget -o ${FILE} ${FILE_DOWNLOAD}
+  wget -q -O ${FILE} ${FILE_DOWNLOAD}
 fi
 
 chmod 755 ${FILE}
