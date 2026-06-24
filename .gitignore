@@ -20,3 +20,9 @@ include/bin/scp
 include/bin/dbclient
 include/bin/dropbear*
 include/sbin/dropbear*
+vrfy/
+cramfsck
+mkcramfs
+cramfs/
+release/
+mtd4

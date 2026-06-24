@@ -1,5 +1,0 @@
---2026-06-24 09:07:58--  https://github.com/OpenIPC/ipctool/releases/download/latest/ipctool
-Resolving github.com (github.com)... 140.82.121.4
-Connecting to github.com (github.com)|140.82.121.4|:443... connected.
-ERROR: The certificate of 'github.com' is not trusted.
-ERROR: The certificate of 'github.com' doesn't have a known issuer.

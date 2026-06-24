@@ -1,3 +1,0 @@
-#!/bin/sh
-
-/bin/tar -C /var/ -xf /var/TFcard_upgrade.tar
