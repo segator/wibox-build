@@ -14,7 +14,7 @@ extract:
 build:
 	rm -f $(BUILD_DIR)/patched 2>/dev/null
 	mkdir -p release
-	mkcramfs -e 0 -v -L $(BUILD_DIR) release/image-$(DATE)
+	mkcramfs -e 0 -v $(BUILD_DIR) release/image-$(DATE)
 	ln -sf image-$(DATE) release/latest
 
 patch:

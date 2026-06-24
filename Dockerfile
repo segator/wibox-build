@@ -1,13 +1,12 @@
-FROM ubuntu:16.04
+FROM ghcr.io/duhow/wibox-crosstool:latest
 
+# Cramfs tools built on Ubuntu 16.04 (zlib 1.2.8, compatible with GK710X kernel)
+COPY mkcramfs cramfsck /usr/local/bin/
+RUN chmod +x /usr/local/bin/mkcramfs /usr/local/bin/cramfsck
+
+# Extra build deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates git build-essential zlib1g-dev make wget bzip2 \
+    rsync wget bzip2 \
     && rm -rf /var/lib/apt/lists/*
-
-# Build cramfs tools
-RUN git clone --depth 1 https://github.com/npitre/cramfs-tools.git /tmp/ct \
-    && cd /tmp/ct && make \
-    && cp cramfsck mkcramfs /usr/local/bin/ \
-    && rm -rf /tmp/ct
 
 WORKDIR /build
