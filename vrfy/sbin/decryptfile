@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/sbin/decrypt /var/TFcard_upgrade.tar

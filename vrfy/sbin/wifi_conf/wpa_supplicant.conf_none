@@ -1,0 +1,9 @@
+# WPA-PSK/TKIP
+
+ctrl_interface=/var/run/wpa_supplicant
+
+network={
+        ssid="whoami"
+        key_mgmt=NONE
+}
+
