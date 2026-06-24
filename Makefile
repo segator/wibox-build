@@ -26,6 +26,8 @@ patch:
 	@touch $(BUILD_DIR)/patched
 
 clean:
+	rm -f include/sbin/dropbearmulti include/sbin/dropbear include/sbin/dropbearkey include/sbin/dropbearconvert
+	rm -f include/bin/mosquitto_sub include/bin/mosquitto_pub include/bin/scp include/bin/dbclient
 	rm -rf $(BUILD_DIR) 2>/dev/null
 	rm -rf $(BUILD_DIR) 2>/dev/null
 
