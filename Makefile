@@ -8,6 +8,7 @@ MODEL ?= none
 all: extract patch build
 
 extract:
+	rm -rf $(BUILD_DIR)
 	cramfsck -x $(BUILD_DIR) $(FILE)
 
 build:
@@ -25,6 +26,7 @@ patch:
 	@touch $(BUILD_DIR)/patched
 
 clean:
+	rm -rf $(BUILD_DIR) 2>/dev/null
 	rm -rf $(BUILD_DIR) 2>/dev/null
 
 $(BUILD_DIR): extract
